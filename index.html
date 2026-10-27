@@ -1,0 +1,163 @@
+<!DOCTYPE html><html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>Verifica bonifici</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F2F4F7;--sf:#fff;--sf2:#F8FAFC;--ln:#E6E8EE;--ink:#111827;--ink2:#3F4A5A;--ink3:#6B7686;--ac:#0891B2;--acd:#0E7490;--acw:#ECFEFF;--gr:#15803D;--grw:#DCFCE7;--am:#B45309;--amw:#FEF3C7;--bl:#1D4ED8;--blw:#DBEAFE;--rd:#C2410C;--rdw:#FFF1EB;--vi:#6D4AE0;--viw:#F0ECFE}
+:root[data-tema="scuro"]{--bg:#0F141B;--sf:#161D27;--sf2:#131A23;--ln:#263243;--ink:#E6EBF2;--ink2:#CBD5E1;--ink3:#94A3B8;--ac:#22D3EE;--acd:#22D3EE;--acw:rgba(34,211,238,.1);--grw:rgba(52,211,153,.12);--gr:#34D399;--amw:rgba(245,158,11,.15);--am:#F59E0B;--blw:rgba(96,165,250,.14);--bl:#60A5FA;--rdw:rgba(251,146,60,.12);--rd:#FB923C;--viw:rgba(167,139,250,.14);--vi:#A78BFA}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Manrope,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--ink);padding:22px 24px 40px;font-size:13px}
+button,input{font-family:inherit}
+.ph{display:flex;align-items:flex-end;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.ph h1{font-size:22px;font-weight:800;letter-spacing:-.02em}.ph p{font-size:12.5px;color:var(--ink3);margin-top:3px}
+.agg{font-size:11px;color:var(--ink3);border:1px solid var(--ln);background:var(--sf);border-radius:999px;padding:3px 10px;font-family:'JetBrains Mono',monospace}
+.btn{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--ln);background:var(--sf);color:var(--ink2);border-radius:999px;padding:7px 14px;font-size:12.5px;font-weight:700;cursor:pointer;white-space:nowrap}
+.btn:hover{border-color:var(--ac);color:var(--ac)}
+.btn.pri{background:var(--ac);border-color:var(--ac);color:#fff}:root[data-tema="scuro"] .btn.pri{color:#0B1A1A}
+.btn.ros{border-color:var(--rd);color:var(--rd);background:var(--sf)}.btn.ros:hover{background:var(--rdw)}
+.btn.gh{border-color:transparent;background:transparent;color:var(--ink3);padding-left:0}
+.btn:disabled{opacity:.55;cursor:default}
+.tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:14px}
+.tile{border:1px solid var(--ln);border-radius:14px;background:var(--sf);padding:14px 16px;display:flex;align-items:center;gap:12px;cursor:pointer;text-align:left;color:inherit}
+.tile.on{border:1.5px solid var(--ac);box-shadow:0 0 0 3px var(--acw)}
+.tile .i{width:34px;height:34px;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;flex:none}
+.tile b{display:block;font-size:22px;font-weight:800;letter-spacing:-.02em}.tile small{font-size:12px;color:var(--ink3)}
+.c{background:var(--sf);border:1px solid var(--ln);border-radius:14px;overflow:hidden;box-shadow:0 1px 2px rgba(16,24,40,.04)}
+.hd{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 18px;border-bottom:1px solid var(--ln);flex-wrap:wrap}
+.sg{display:inline-flex;border:1px solid var(--ln);border-radius:9px;overflow:hidden;background:var(--sf2)}
+.sg button{border:0;border-right:1px solid var(--ln);background:transparent;padding:7px 13px;font-size:12.5px;font-weight:600;color:var(--ink3);cursor:pointer}
+.sg button:last-child{border-right:0}.sg button.on{background:var(--acw);color:var(--ac);box-shadow:inset 0 -2px 0 var(--ac)}
+input[type=search]{border:1px solid var(--ln);border-radius:9px;padding:8px 11px;font-size:13px;background:var(--sf);color:var(--ink);width:260px;max-width:100%}
+.pc{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 18px;padding:14px 18px;border-bottom:1px solid var(--ln)}
+.pc:last-child{border-bottom:0}.pc.ignorato{opacity:.5}
+.pc .n{font-size:13.5px;font-weight:700}
+.chip{display:inline-flex;align-items:center;font-size:10.5px;font-weight:700;border-radius:999px;padding:2px 8px;margin-left:5px;vertical-align:1px;white-space:nowrap}
+.met{font-size:11.5px;color:var(--ink3);margin-top:4px;line-height:1.5}.met b{color:var(--ink2);font-weight:700}
+.det{font-size:12px;color:var(--ink2);margin-top:6px;font-weight:600;line-height:1.45}
+.ref{font:500 10.5px/1.5 'JetBrains Mono',monospace;color:var(--ink3);margin-top:4px;cursor:pointer;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ref.aperta{white-space:normal}
+.dx{display:flex;flex-direction:column;align-items:flex-end;gap:8px}
+.imp{font-size:16px;font-weight:800;font-variant-numeric:tabular-nums;white-space:nowrap}
+.sost{margin-top:8px;padding:8px 12px;background:var(--rdw);border-radius:10px;font-size:11.5px;color:var(--rd);line-height:1.45}
+.sug{display:flex;align-items:center;gap:10px;border:1px solid var(--ln);border-radius:10px;padding:8px 12px;background:var(--sf2);margin-top:6px;font-size:12px}
+.sug span{flex:1}.sug small{color:var(--ink3)}
+.empty{text-align:center;padding:30px;color:var(--ink3)}
+.chiave{max-width:420px;background:var(--sf);border:1px solid var(--ln);border-radius:14px;padding:18px}
+.chiave p{font-size:13px;color:var(--ink3);margin-bottom:10px}.chiave form{display:flex;gap:8px}
+.chiave input{flex:1;border:1px solid var(--ln);border-radius:999px;padding:9px 14px;font-size:13px;background:var(--sf);color:var(--ink)}
+.kv{display:flex;justify-content:space-between;gap:12px;padding:6px 0;border-bottom:1px dashed var(--ln)}.kv:last-child{border-bottom:0}.kv span{color:var(--ink3)}.kv b{font-weight:700;text-align:right}
+.toast{position:fixed;bottom:20px;right:20px;padding:12px 18px;border-radius:12px;font-size:13px;font-weight:600;z-index:95;background:var(--sf);border:1px solid var(--ln);box-shadow:0 10px 30px rgba(16,24,40,.15)}
+.toast.ok{border-color:var(--gr);color:var(--gr)}.toast.err{border-color:var(--rd);color:var(--rd)}
+@media (max-width:800px){.tiles{grid-template-columns:1fr 1fr}.pc{grid-template-columns:1fr}.dx{align-items:flex-start}}
+
+/* PORTALE NEXT-110: finestre a video del portale al posto degli avvisi del browser */
+.velo{position:fixed;inset:0;background:rgba(15,20,27,.45);display:flex;align-items:center;justify-content:center;padding:20px;z-index:90}
+.fin{background:var(--sf,#fff);color:var(--ink,#111827);border:1px solid var(--ln,#E6E8EE);border-radius:16px;width:100%;max-width:480px;box-shadow:0 20px 50px rgba(16,24,40,.25);overflow:hidden;font-family:inherit}
+.fin .fh{display:flex;align-items:flex-start;gap:12px;padding:18px 20px 8px}
+.fin .fh .fi{width:34px;height:34px;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;flex:none;font-size:16px;font-weight:800}
+.fin .fh b{display:block;font-size:15px;font-weight:800}
+.fin .fm{padding:4px 20px 16px 66px;font-size:13.5px;line-height:1.55;color:var(--ink2,#3F4A5A)}
+.fin .fp{display:flex;justify-content:flex-end;gap:8px;padding:12px 20px;border-top:1px solid var(--ln,#E6E8EE);background:var(--sf2,#F8FAFC)}
+.fin .fb{border:1px solid var(--ln,#E6E8EE);background:var(--sf,#fff);color:var(--ink2,#3F4A5A);border-radius:999px;padding:8px 16px;font:700 12.5px inherit;font-family:inherit;cursor:pointer}
+.fin .fb.si{background:var(--ac,#0891B2);border-color:var(--ac,#0891B2);color:#fff}
+.fin .fb.rosso{background:#DC2626;border-color:#DC2626;color:#fff}
+.fin .gira{width:16px;height:16px;border:2px solid var(--acw,#ECFEFF);border-top-color:var(--ac,#0891B2);border-radius:50%;animation:fgira .8s linear infinite;display:inline-block;vertical-align:-3px;margin-right:8px}
+@keyframes fgira{to{transform:rotate(360deg)}}
+
+</style></head><body>
+<div class="ph"><div><h1>Verifica bonifici</h1><p>Bonifici ricevuti confrontati con le rate delle fatture: ritenuta 11% e importi.</p></div><span class="agg" id="agg">aggiornato --:--</span><span style="margin-left:auto"><button class="btn" id="bAgg">↻ Aggiorna</button></span></div>
+<div id="corpo"><p class="empty" style="text-align:left">Caricamento... il calcolo della riconciliazione richiede qualche secondo.</p></div>
+<script>
+
+/* PORTALE NEXT-110: finestre a video (chiedi, avvisa, attendi) al posto di confirm/alert del browser */
+function fChiudi(){var v=document.getElementById('fVelo');if(v)v.remove();}
+function fEsc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function fApri(tipo,titolo,testoHtml,bottoni){fChiudi();var col={chiedi:['var(--acw,#ECFEFF)','var(--ac,#0891B2)','?'],ok:['var(--grw,#DCFCE7)','var(--gr,#16A34A)','✓'],attenzione:['var(--amw,#FEF3C7)','var(--am,#B45309)','!'],errore:['#FEE2E2','#DC2626','×'],attesa:['var(--acw,#ECFEFF)','var(--ac,#0891B2)','…']}[tipo]||['#eee','#333','·'];
+ var v=document.createElement('div');v.className='velo';v.id='fVelo';
+ v.innerHTML='<div class="fin" role="dialog" aria-modal="true"><div class="fh"><span class="fi" style="background:'+col[0]+';color:'+col[1]+'">'+col[2]+'</span><div><b>'+fEsc(titolo)+'</b></div></div><div class="fm">'+testoHtml+'</div>'+(bottoni&&bottoni.length?'<div class="fp">'+bottoni.map(function(b,i){return '<button class="fb '+(b[1]||'')+'" data-fb="'+i+'">'+fEsc(b[0])+'</button>';}).join('')+'</div>':'')+'</div>';
+ document.body.appendChild(v);
+ return new Promise(function(ok){v.addEventListener('click',function(e){var b=e.target.closest('[data-fb]');if(b){var i=+b.getAttribute('data-fb');fChiudi();ok(bottoni[i][2]);}else if(e.target===v&&tipo!=='attesa'){fChiudi();ok(null);}});
+  var s=v.querySelector('.fb.si,.fb.rosso');if(s)s.focus();});}
+function chiedi(titolo,testoHtml,si,rosso){return fApri('chiedi',titolo,testoHtml,[['Annulla','',false],[si||'Conferma',rosso?'rosso':'si',true]]);}
+function avvisa(tipo,titolo,testoHtml){return fApri(tipo,titolo,testoHtml,[['Chiudi','si',true]]);}
+function attendi(testo){fApri('attesa',testo||'Un momento…','<span class="gira"></span>'+fEsc(testo||'Sto lavorando…'),[]);}
+document.addEventListener('keydown',function(e){if(e.key==='Escape'){var v=document.getElementById('fVelo');if(v&&!v.querySelector('.gira'))v.click();}});
+
+/* PORTALE NEXT-110: Verifica bonifici fuori da n8n (era GET /riconciliazione). Il calcolo resta in n8n: la funzione
+   bonifici ne legge gli elenchi. «Invia avviso al cliente», «Abbina» e «Ignora» chiamano gli stessi webhook di prima
+   (avvisa-cliente-bonifico, assegna-bonifico-manuale), con la conferma in una finestra del portale. */
+var EF='https://pnxhthrheqeucoisifjw.supabase.co/functions/v1/bonifici';
+var N8='https://n8n.srv1030489.hstgr.cloud/webhook/';
+var PASS='',D=null,TAB='errori',Q='';
+var ICO={alert:'<path d="M12 3 2 20h20z"/><path d="M12 10v4M12 17h.01"/>',ok:'<path d="M5 12l5 5L20 7"/>',search:'<circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/>',card:'<rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20M6 15h4"/>',send:'<path d="M22 2 11 13"/><path d="M22 2l-7 20-4-9-9-4z"/>',link:'<path d="M7 17 17 7M9 7h8v8"/>'};
+function svg(k,n){n=n||15;return '<svg width="'+n+'" height="'+n+'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+ICO[k]+'</svg>';}
+var esc=fEsc;
+function eur(v){var p=Number(v||0).toFixed(2).split('.');return p[0].replace(/\B(?=(\d{3})+(?!\d))/g,'.')+','+p[1]+' €';}
+function data(s){if(!s)return '';var m=String(s).match(/^(\d{4})-(\d{2})-(\d{2})/);return m?m[3]+'/'+m[2]+'/'+m[1]:esc(s);}
+function toast(m,ok){var t=document.getElementById('toast');if(!t){t=document.createElement('div');t.id='toast';document.body.appendChild(t);}t.className='toast '+(ok?'ok':'err');t.textContent=m;clearTimeout(window.__tt);window.__tt=setTimeout(function(){t.remove();},4000);}
+function chip(t,c){return '<span class="chip" style="background:var(--'+c+'w);color:var(--'+c+')">'+esc(t)+'</span>';}
+function stato(m){return m.status==='errore'?chip('Errore','rd'):(m.status==='warning'||m.status==='attenzione'?chip('Attenzione','am'):(m.status==='info'?chip('Da guardare','bl'):chip('Corretto','gr')));}
+function colore(m){return m.status==='errore'?'rd':(m.status==='ok'?'gr':'am');}
+function cartaM(m,conAvviso){
+ var met=['Fattura <b>'+esc(m.invoice_name)+'</b>'];if(m.rata_amount)met.push('rata '+eur(m.rata_amount));if(m.rata_scadenza)met.push('scadenza '+data(m.rata_scadenza));met.push('accredito '+data(m.bank_date));if(m.has_ritenuta)met.push('ritenuta '+eur(m.ritenuta_amount));if(m.agevolazione)met.push(esc(String(m.agevolazione).replace(/_/g,' ')));
+ var br=(D.bonificiRisolti||[]).find(function(b){return String(b.client_name||'').toUpperCase()===String(m.client_name||'').toUpperCase()&&b.invoice_name===m.invoice_name;});
+ var sost=(br&&m.status==='ok'&&m.status_detail&&m.status_detail.indexOf('Assegnato manualmente')<0)?'<div class="sost">⚠ <b>Sostituisce un bonifico errato</b> del '+data(br.bank_date)+' — '+eur(br.bank_amount)+' — '+esc(br.status_detail||'')+(br.risolto_note?'<br><em>'+esc(br.risolto_note)+'</em>':'')+'</div>':'';
+ var bt=(conAvviso&&m.status==='errore')?'<button class="btn ros" data-avviso="'+m.bank_id+'">'+svg('send',13)+'Invia avviso al cliente</button>':'';
+ return '<div class="pc"><div><span class="n">'+esc(m.client_name)+'</span>'+chip('Rata '+m.rata_num,'vi')+stato(m)+'<div class="met">'+met.join(' · ')+'</div><div class="det">'+esc(m.status_detail||'')+'</div>'+sost+(m.bank_ref?'<div class="ref" title="Clicca per leggere tutta la causale">'+esc(m.bank_ref)+'</div>':'')+'</div><div class="dx"><span class="imp" style="color:var(--'+colore(m)+')">'+eur(m.bank_amount)+'</span>'+bt+'</div></div>';}
+function cartaN(m){
+ var s=(m.suggerimenti||[]).map(function(g,i){return '<div class="sug"><span><b>'+esc(g.client_name)+'</b> · fattura '+esc(g.invoice_name)+' · rata '+g.rata_num+' ('+eur(g.rata_amount)+') <small>· '+esc(g.tipo||'')+'</small></span><button class="btn pri" data-abbina="'+m.bank_id+'" data-i="'+i+'">'+svg('link',13)+'Abbina</button></div>';}).join('')||'<div class="det" style="font-weight:500;color:var(--ink3)">Nessun cliente suggerito: '+esc(m.invoice_hint||'nessun indizio nella causale')+'.</div>';
+ return '<div class="pc" id="nm-'+m.bank_id+'"><div><span class="n">Bonifico non abbinato</span>'+(m.has_ritenuta?chip('ritenuta '+eur(m.ritenuta_amount),'gr'):'')+'<div class="met">Accredito '+data(m.bank_date)+(m.invoice_hint?' · '+esc(m.invoice_hint):'')+'</div>'+(m.bank_ref?'<div class="ref" title="Clicca per leggere tutta la causale">'+esc(m.bank_ref)+'</div>':'')+s+((m.suggerimenti||[]).length?'<button class="btn gh" data-ignora="'+m.bank_id+'">Ignora questo bonifico</button>':'')+'</div><div class="dx"><span class="imp" style="color:var(--bl)">'+eur(m.bank_amount)+'</span></div></div>';}
+function disegna(){
+ var err=D.errori.concat(D.warnings),cor=D.corretti.concat(D.infos),nm=D.nonMatchati,tutti=err.concat(cor);
+ var L={errori:err,corretti:cor,non:nm,tutti:tutti}[TAB];var q=Q.toLowerCase();
+ if(q)L=L.filter(function(m){return [m.client_name,m.invoice_name,m.bank_ref,m.invoice_hint].join(' ').toLowerCase().indexOf(q)>=0||(m.suggerimenti||[]).some(function(g){return (g.client_name+' '+g.invoice_name).toLowerCase().indexOf(q)>=0;});});
+ var T=[['errori','Errori da verificare','rd','alert',err.length],['corretti','Corretti','gr','ok',cor.length],['non','Non abbinati','bl','search',nm.length],['tutti','Analizzati','ac','card',tutti.length+nm.length]];
+ var h='<div class="tiles">'+T.map(function(t){return '<button class="tile'+(t[0]===TAB?' on':'')+'" data-tab="'+t[0]+'"><span class="i" style="background:var(--'+t[2]+'w);color:var(--'+t[2]+')">'+svg(t[3],16)+'</span><span><b>'+t[4]+'</b><small>'+t[1]+'</small></span></button>';}).join('')+'</div>';
+ h+='<section class="c"><div class="hd"><span class="sg">'+[['errori','Errori · '+err.length],['corretti','Corretti · '+cor.length],['non','Non abbinati · '+nm.length],['tutti','Tutti · '+tutti.length]].map(function(o){return '<button data-tab="'+o[0]+'"'+(o[0]===TAB?' class="on"':'')+'>'+o[1]+'</button>';}).join('')+'</span><input type="search" id="cerca" placeholder="Cerca cliente, fattura, causale…" value="'+esc(Q)+'"></div>';
+ h+=L.length?L.map(function(m){return TAB==='non'?cartaN(m):cartaM(m,TAB==='errori'||TAB==='tutti');}).join(''):'<p class="empty">'+(q?'Nessun risultato per questa ricerca':'Niente da mostrare qui')+'</p>';
+ h+='</section>';
+ document.getElementById('corpo').innerHTML=h;
+ var c=document.getElementById('cerca');c.oninput=function(){Q=this.value;var pos=this.selectionStart;disegna();var n=document.getElementById('cerca');n.focus();try{n.setSelectionRange(pos,pos)}catch(e){}};}
+function trova(lista,id){return lista.find(function(m){return String(m.bank_id)===String(id);});}
+async function avviso(b){var m=trova(D.errori.concat(D.warnings),b.getAttribute('data-avviso'));if(!m)return;
+ if(!await chiedi('Invia avviso al cliente','Mando a <b>'+esc(m.client_name)+'</b> l\'avviso sul bonifico di '+eur(m.bank_amount)+' del '+data(m.bank_date)+'?<br><br><span style="color:var(--ink3)">'+esc(m.status_detail||'')+'</span>','Invia avviso'))return;
+ b.disabled=true;b.textContent='Invio…';
+ try{var r=await fetch(N8+'avvisa-cliente-bonifico',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({bank_id:m.bank_id,client_name:m.client_name,invoice_name:m.invoice_name,rata_amount:m.rata_amount})});var d=await r.json();
+  if(!d.success)throw new Error(d.error||'Errore');b.textContent='✓ Inviato';toast('Avviso inviato a '+m.client_name,true);}
+ catch(e){b.disabled=false;b.innerHTML=svg('send',13)+'Invia avviso al cliente';avvisa('errore','Avviso non inviato',esc(e.message||e));}}
+async function abbina(b){var m=trova(D.nonMatchati,b.getAttribute('data-abbina'));if(!m)return;var g=(m.suggerimenti||[])[+b.getAttribute('data-i')];if(!g)return;
+ var kv=function(a,v){return '<div class="kv"><span>'+a+'</span><b>'+v+'</b></div>';};
+ if(!await chiedi('Abbino il bonifico a '+g.client_name+'?','<div>'+kv('Bonifico',eur(m.bank_amount)+' del '+data(m.bank_date))+kv('Fattura',esc(g.invoice_name)+' · rata '+g.rata_num)+kv('Importo rata',eur(g.rata_amount))+'</div><p style="margin-top:10px;color:var(--ink3)">Il bonifico viene segnato come pagamento di questa rata.</p>','Abbina'))return;
+ b.disabled=true;b.textContent='Salvo…';
+ try{var r=await fetch(N8+'assegna-bonifico-manuale',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({bank_id:m.bank_id,client_name:g.client_name,invoice_name:g.invoice_name,rata_amount:g.rata_amount})});var d=await r.json();
+  if(!d.success)throw new Error(d.error||'Errore');toast('Abbinato a '+g.client_name,true);carica();}
+ catch(e){b.disabled=false;b.innerHTML=svg('link',13)+'Abbina';avvisa('errore','Abbinamento non salvato',esc(e.message||e));}}
+async function ignora(b){var m=trova(D.nonMatchati,b.getAttribute('data-ignora'));if(!m)return;
+ if(!await chiedi('Ignoro i suggerimenti?','Il bonifico di <b>'+eur(m.bank_amount)+'</b> del '+data(m.bank_date)+' resta non abbinato e i suggerimenti non vengono più proposti.','Ignora'))return;
+ b.disabled=true;
+ try{var r=await fetch(N8+'assegna-bonifico-manuale',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({bank_id:m.bank_id,client_name:'IGNORATO',invoice_name:'IGNORATO',rata_amount:0,ignora:true})});var d=await r.json();
+  if(!d.success)throw new Error(d.error||'Errore');toast('Suggerimenti ignorati',true);var c=document.getElementById('nm-'+m.bank_id);if(c){c.classList.add('ignorato');c.querySelectorAll('.sug,[data-ignora]').forEach(function(x){x.remove();});}}
+ catch(e){b.disabled=false;avvisa('errore','Non salvato',esc(e.message||e));}}
+document.addEventListener('click',function(e){var b;
+ if(b=e.target.closest('[data-tab]')){TAB=b.getAttribute('data-tab');disegna();return;}
+ if(b=e.target.closest('[data-avviso]')){avviso(b);return;}
+ if(b=e.target.closest('[data-abbina]')){abbina(b);return;}
+ if(b=e.target.closest('[data-ignora]')){ignora(b);return;}
+ if(b=e.target.closest('.ref')){b.classList.toggle('aperta');return;}
+ if(e.target.closest('#bAgg')){carica();return;}});
+function chiediPass(msg){document.getElementById('corpo').innerHTML='<div class="chiave"><p>'+(msg||'Scrivi la password della regia per aprire i bonifici.')+'</p><form id="fp"><input type="password" id="ip" autocomplete="current-password" placeholder="password"><button class="btn pri">Entra</button></form></div>';
+ document.getElementById('fp').onsubmit=function(e){e.preventDefault();PASS=document.getElementById('ip').value.trim();try{sessionStorage.setItem('regia_pass',PASS)}catch(x){}carica();};}
+async function carica(){if(!PASS){chiediPass();return;}
+ if(!D)document.getElementById('corpo').innerHTML='<p class="empty" style="text-align:left">Caricamento... il calcolo della riconciliazione richiede qualche secondo.</p>';
+ var bA=document.getElementById('bAgg');bA.disabled=true;
+ try{var r=await fetch(EF+'?t='+encodeURIComponent(PASS));var d=await r.json();
+  if(r.status===401){PASS='';try{sessionStorage.removeItem('regia_pass')}catch(x){}chiediPass('Password non valida, riprova.');return;}
+  if(!d.ok)throw new Error(d.errore||'errore');D=d;disegna();
+  document.getElementById('agg').textContent='aggiornato '+new Date().toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});}
+ catch(e){document.getElementById('corpo').innerHTML='<p class="empty">Errore: '+esc(e.message||e)+'</p>';}
+ finally{bA.disabled=false;}}
+window.addEventListener('message',function(e){var d=e.data||{};
+ if(d.tipo==='tema'&&(d.tema==='chiaro'||d.tema==='scuro'))document.documentElement.setAttribute('data-tema',d.tema);
+ if(d.tipo==='pass'&&d.pass&&!PASS){PASS=d.pass;carica();}});
+try{PASS=sessionStorage.getItem('regia_pass')||'';}catch(e){}
+try{var t=window.parent.document.documentElement.getAttribute('data-tema');if(t)document.documentElement.setAttribute('data-tema',t);}catch(e){}
+if(PASS)carica();else{try{window.parent.postMessage({tipo:'chiedi_pass'},'*');}catch(e){}setTimeout(function(){if(!PASS)chiediPass();},700);}
+</script></body></html>
